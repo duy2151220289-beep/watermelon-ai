@@ -40,7 +40,7 @@ export default defineConfig({
       }
     })
   ],
-  base: '/static/',
+  base: process.env.VERCEL ? '/' : '/static/',
   server: {
     port: 5173,
     host: '0.0.0.0',
