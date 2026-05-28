@@ -28,7 +28,9 @@ import AgronomistChat from './components/AgronomistChat'
 
 
 
-const API_ROOT = '/api'
+const API_ROOT = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+  ? '/api'
+  : 'https://watermelon-ai-q84h.onrender.com/api'
 
 function App() {
   const [history, setHistory] = useState([])

@@ -2,6 +2,10 @@ import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import axios from 'axios'
 
+const API_ROOT = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+  ? '/api'
+  : 'https://watermelon-ai-q84h.onrender.com/api'
+
 function AgronomistChat({ activeResult, user }) {
   const [isOpen, setIsOpen] = useState(false)
   const [isHovered, setIsHovered] = useState(false)
@@ -58,7 +62,7 @@ function AgronomistChat({ activeResult, user }) {
         confidence: activeResult.confidence
       } : null
 
-      const response = await axios.post('/api/chat/', {
+      const response = await axios.post(`${API_ROOT}/chat/`, {
         message: text,
         history: history,
         context: context

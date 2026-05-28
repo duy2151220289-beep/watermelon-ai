@@ -9,7 +9,9 @@ export default function ProfilePage({ user, onNavigate, onViewCertificate, onUse
   const [error, setError] = useState('')
 
   const [premiumModalOpen, setPremiumModalOpen] = useState(false)
-  const API_ROOT = '/api'
+  const API_ROOT = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+    ? '/api'
+    : 'https://watermelon-ai-q84h.onrender.com/api'
 
   const handleUpdateRole = async (newRole) => {
     try {
