@@ -1,0 +1,13 @@
+train: ../train/images
+val: ../valid/images
+test: ../test/images
+
+nc: 1
+names: ['watermelon']
+
+roboflow:
+  workspace: nguyen-le-bao-duy
+  project: watermelon-lyddt-qgk58
+  version: 1
+  license: CC BY 4.0
+  url: https://app.roboflow.com/nguyen-le-bao-duy/watermelon-lyddt-qgk58/1

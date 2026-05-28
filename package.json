@@ -1,0 +1,8 @@
+{
+  "name": "watermelon-ai-platform",
+  "private": true,
+  "scripts": {
+    "backend": "cd backend && python manage.py runserver",
+    "frontend": "cd frontend && npm run dev"
+  }
+}
