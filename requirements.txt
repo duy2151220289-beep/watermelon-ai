@@ -6,3 +6,4 @@ numpy>=1.26
 opencv-python>=4.8
 ultralytics>=8.0
 torch>=2.0
+gunicorn>=21.2.0
