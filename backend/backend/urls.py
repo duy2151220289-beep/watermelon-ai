@@ -16,7 +16,8 @@ urlpatterns = [
     path('sw.js', serve, {'document_root': settings.BASE_DIR.parent / 'frontend' / 'dist', 'path': 'sw.js'}),
     path('registerSW.js', serve, {'document_root': settings.BASE_DIR.parent / 'frontend' / 'dist', 'path': 'registerSW.js'}),
     path('manifest.webmanifest', serve, {'document_root': settings.BASE_DIR.parent / 'frontend' / 'dist', 'path': 'manifest.webmanifest'}),
-    re_path(r'^(?P<path>workbox-[a-f0-9]+\.js)$', serve, {'document_root': settings.BASE_DIR.parent / 'frontend' / 'dist'}),
+    # Serve media files on production (Render)
+    re_path(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
 ]
 
 if settings.DEBUG:
