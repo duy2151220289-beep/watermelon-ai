@@ -41,10 +41,6 @@ function useTyping(values, { typeMs = 70, deleteMs = 45, holdMs = 900 } = {}) {
   return values[index].slice(0, subIndex)
 }
 
-const MEDIA_URL = typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
-  ? '/media'
-  : 'https://watermelon-ai-q84h.onrender.com/media'
-
 export default function Hero({ activeResult, isLoading, onOpenDeveloperModal, onOpenInstallModal, onOpenDonateModal }) {
 
   const cardRef = useRef(null)
@@ -90,7 +86,7 @@ export default function Hero({ activeResult, isLoading, onOpenDeveloperModal, on
           playsInline
           className="h-full w-full object-cover opacity-20"
         >
-          <source src={`${MEDIA_URL}/hero_bg.mp4`} type="video/mp4" />
+          <source src="/hero_bg.mp4" type="video/mp4" />
           <source src="https://assets.mixkit.co/videos/preview/mixkit-glowing-dots-in-a-dark-space-41604-large.mp4" type="video/mp4" />
         </video>
         {/* Soft overlays to merge video edges and guarantee text readability */}
