@@ -82,47 +82,37 @@ export default function CameraLive({ onCapture, isLoading }) {
     }
   }
 
-  const captureFrameAndScan = () => {
-    return new Promise((resolve, reject) => {
-      if (!videoRef.current || !canvasRef.current) {
-        resolve()
-        return
-      }
-      const video = videoRef.current
-      const canvas = canvasRef.current
+  const captureFrameAndScan = async () => {
+    if (!videoRef.current) return
+    const video = videoRef.current
+    
+    try {
+      // Load local ONNX inference dynamically to keep initial bundle size small
+      const { runLocalInference } = await import('../utils/localInference')
       
-      // Sync hidden canvas size with video resolution
-      canvas.width = video.videoWidth
-      canvas.height = video.videoHeight
-      const ctx = canvas.getContext('2d')
-      ctx.drawImage(video, 0, 0, canvas.width, canvas.height)
+      // Run local inference directly on the HTMLVideoElement with confidence threshold 0.48
+      const result = await runLocalInference(video, 0.48, 0.45)
       
-      canvas.toBlob(async (blob) => {
-        if (!blob) {
-          resolve()
-          return
-        }
-        
-        const file = new File([blob], 'camera_frame.jpg', { type: 'image/jpeg' })
-        const formData = new FormData()
-        formData.append('image', file)
-        
-        try {
-          // Trigger the App handleDetection API callback in SILENT mode
-          const result = await onCapture(formData, 'camera', true)
-          if (result) {
-            drawBoundingBox(result)
-          } else {
-            clearOverlay()
+      if (result && result.confidence > 0) {
+        // Adapt local result format to match drawBoundingBox's expected format
+        const adaptedResult = {
+          label: result.class || 'watermelon',
+          confidence: result.confidence,
+          bbox: {
+            x1: result.box[0],
+            y1: result.box[1],
+            x2: result.box[2],
+            y2: result.box[3]
           }
-          resolve()
-        } catch (err) {
-          // Clear overlay on errors
-          clearOverlay()
-          reject(err)
         }
-      }, 'image/jpeg', 0.8) // Compress frame to 80% quality for faster API uploads
-    })
+        drawBoundingBox(adaptedResult)
+      } else {
+        clearOverlay()
+      }
+    } catch (err) {
+      console.warn('Local realtime scan failed', err)
+      clearOverlay()
+    }
   }
 
   // Draw scaled neon bounding box directly onto the canvas overlay
