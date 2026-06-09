@@ -1,10 +1,10 @@
 import * as ort from 'onnxruntime-web/wasm'
 
 
-// Configure WASM paths to load from jsdelivr CDN (cached by Service Worker for offline use)
-ort.env.wasm.wasmPaths = 'https://cdn.jsdelivr.net/npm/onnxruntime-web@1.18.0/dist/'
+// Configure WASM paths to load locally from public directory (works offline and avoids CORS/CDN block)
+ort.env.wasm.wasmPaths = '/'
 ort.env.wasm.numThreads = 1
-ort.env.wasm.simd = false
+
 
 
 let session = null
