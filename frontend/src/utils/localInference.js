@@ -3,6 +3,8 @@ import * as ort from 'onnxruntime-web'
 // Configure WASM paths to load from jsdelivr CDN (cached by Service Worker for offline use)
 ort.env.wasm.wasmPaths = 'https://cdn.jsdelivr.net/npm/onnxruntime-web@1.18.0/dist/'
 ort.env.wasm.numThreads = 1
+ort.env.wasm.simd = false
+
 
 let session = null
 
