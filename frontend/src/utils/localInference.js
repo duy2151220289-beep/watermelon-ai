@@ -1,4 +1,5 @@
-import * as ort from 'onnxruntime-web'
+import * as ort from 'onnxruntime-web/wasm'
+
 
 // Configure WASM paths to load from jsdelivr CDN (cached by Service Worker for offline use)
 ort.env.wasm.wasmPaths = 'https://cdn.jsdelivr.net/npm/onnxruntime-web@1.18.0/dist/'
