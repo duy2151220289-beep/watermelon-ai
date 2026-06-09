@@ -124,9 +124,15 @@ export default function CameraLive({ onCapture, isLoading }) {
     const ctx = canvas.getContext('2d')
     const rect = video.getBoundingClientRect()
     
-    // Size the canvas to exactly match visible layout bounds
+    // Sync canvas resolution with visible video dimensions
     canvas.width = rect.width
     canvas.height = rect.height
+    
+    // Position canvas precisely over the centered video element
+    canvas.style.width = `${rect.width}px`
+    canvas.style.height = `${rect.height}px`
+    canvas.style.top = `${video.offsetTop}px`
+    canvas.style.left = `${video.offsetLeft}px`
     
     ctx.clearRect(0, 0, canvas.width, canvas.height)
 
@@ -135,14 +141,26 @@ export default function CameraLive({ onCapture, isLoading }) {
     const { x1, y1, x2, y2 } = result.bbox
     if (x1 === 0 && y1 === 0 && x2 === 0 && y2 === 0) return
 
-    // Scale from captured resolution to screen visible width/height
-    const scaleX = rect.width / video.videoWidth
-    const scaleY = rect.height / video.videoHeight
+    // Calculate aspect ratios to compensate for object-cover cropping
+    const videoRatio = video.videoWidth / video.videoHeight
+    const elementRatio = rect.width / rect.height
 
-    const boxX = x1 * scaleX
-    const boxY = y1 * scaleY
-    const boxW = (x2 - x1) * scaleX
-    const boxH = (y2 - y1) * scaleY
+    let scale, offsetX = 0, offsetY = 0
+
+    if (elementRatio > videoRatio) {
+      // The element is wider than the video stream (cropped at top and bottom)
+      scale = rect.width / video.videoWidth
+      offsetY = (rect.height - video.videoHeight * scale) / 2
+    } else {
+      // The element is taller than the video stream (cropped at left and right)
+      scale = rect.height / video.videoHeight
+      offsetX = (rect.width - video.videoWidth * scale) / 2
+    }
+
+    const boxX = x1 * scale + offsetX
+    const boxY = y1 * scale + offsetY
+    const boxW = (x2 - x1) * scale
+    const boxH = (y2 - y1) * scale
 
     const accentColor = getComputedStyle(document.documentElement).getPropertyValue('--color-accent').trim() || '#1cf0b3'
     const accentColorRgb = getComputedStyle(document.documentElement).getPropertyValue('--color-accent-rgb').trim() || '28, 240, 179'
